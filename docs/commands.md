@@ -86,6 +86,192 @@ the password is passed to the helper on stdin, never as an argument. `ylctl auth
 Changes the web admin password and keeps the server vault (or the keychain) in step, in an order that cannot lose it: pending record first, then the phone, then a fresh-session login with the new password, then commit. Never takes the new password from the command line, never prints a password.
 Full design, safeguards, failure states and the live test checklist: [password.md](password.md).
 
+## firmware
+
+`ylctl firmware` reads and upgrades the phone's firmware. It uses the phone's own Upgrade page, so it needs the same login as the other commands.
+
+### firmware status
+
+`ylctl firmware status <host>`: running firmware version and model. Read-only.
+
+```sh
+ylctl firmware status 192.168.1.50
+```
+
+### firmware upgrade
+
+`ylctl firmware upgrade <host> <file.rom> [--dry-run] [--yes] [--wait 10m]`
+
+1. reads the `.rom` header (model, version, size, SHA-256) and checks it is a Yealink image;
+2. reads the phone's current version. The same version is refused;
+3. shows the plan. `--dry-run` stops here and sends nothing;
+4. asks first (`--yes` skips the question; without a terminal and without `--yes` it does not run);
+5. uploads the file the way the phone's Upgrade page does, then waits up to `--wait` for the phone to answer with the new version.
+
+The phone reboots itself while it flashes and is unreachable for a few minutes. Do not unplug it. A dropped connection during the upload does not mean it failed: check the version with `firmware status` before you retry.
+
+```sh
+ylctl firmware upgrade 192.168.1.50 ~/Downloads/T4XS-66.86.0.180.rom --dry-run
+ylctl firmware upgrade 192.168.1.50 ~/Downloads/T4XS-66.86.0.180.rom --yes
+```
+
+## login, logout, whoami
+
+These link this computer to your NQ Phone server.
+
+- `ylctl login <server> [--name NAME] [--allow-http]`: links this computer to the server. You approve it in your browser; `--name` sets the name shown on that approval page (default `ylctl`). `--allow-http` is for a trusted lab network only.
+- `ylctl whoami`: shows the linked server and tests the link.
+- `ylctl logout`: forgets the link on this computer.
+
+```sh
+ylctl login https://pbx.example.com --name "ops laptop"
+ylctl whoami
+ylctl logout
+```
+
+## reboot
+
+`ylctl reboot <host> [--yes] [--force]`: restarts the phone from its web interface. It refuses while the phone is on a call (`--force` overrides) and asks first (`--yes` skips the question).
+
+```sh
+ylctl reboot 192.168.1.50 --yes
+```
+
+## recon
+
+`ylctl recon [subnet...] [--super] [--yes] [--no-prompt] [--enroll-url URL] [--auto-register-discovered] [--tftp | --no-tftp] [--dhcp-url] [--keep-dhcp-provisioning] [--force]`
+
+Finds phones on the subnets you name (or a guessed local subnet), shows which are registered, and offers to bring unmanaged ones under management. `--no-prompt` only reports and changes nothing. `--super` uses many parallel workers, for networks you own. Ranges larger than /22 need `--force`.
+
+```sh
+ylctl recon 192.168.1.0/24 --no-prompt
+```
+
+## capture
+
+Packet capture on the phone's Diagnostics page. The phone captures; `ylctl` decodes the stream.
+
+### capture status
+
+`ylctl capture status <host>`: is a capture running? Read-only.
+
+### capture stop
+
+`ylctl capture stop <host>`: stops a capture left running on the phone.
+
+### capture follow
+
+`ylctl capture follow <host> [--format summary|sip|json|pcap] [--filter sip|tcp|udp|tls|dns|arp|icmp] [--ip ADDR] [--port N] [--call-id ID] [--duration 5m] [--max-bytes 20971520] [--out FILE] [--force]`
+
+Starts a capture and prints packets as they arrive. It always stops the capture on exit, on Ctrl-C and when a limit is reached. Refuses if a capture is already running unless `--force`.
+
+```sh
+ylctl capture follow 192.168.1.50 --filter sip
+ylctl capture follow 192.168.1.50 --format pcap | wireshark -k -i -
+```
+
+## logs
+
+The phone's remote syslog, sent to this computer.
+
+### logs show
+
+`ylctl logs show <host>`: the phone's remote syslog settings. Read-only.
+
+### logs follow
+
+`ylctl logs follow <host> [--port 5514] [--ip ADDR] [--level 6] [--grep REGEX] [--duration 10m] [--format text|json] [--dry-run]`
+
+Points the phone's syslog at this computer, prints what arrives, and puts the phone's old settings back when you quit. `--dry-run` shows the change and exits without changing the phone.
+
+```sh
+ylctl logs follow 192.168.1.50 --grep 'REGISTER|INVITE'
+ylctl logs follow 192.168.1.50 --format json
+```
+
+### logs restore
+
+`ylctl logs restore <host>`: puts back the syslog settings saved before a `logs follow` run. Use it if a run was killed.
+
+## push
+
+Pushes XML to the phone, which draws it at once. Useful for previews.
+
+### push show
+
+`ylctl push show <host>`: which addresses the phone accepts pushed XML from. Read-only.
+
+### push allow
+
+`ylctl push allow <host> [--ip ADDR]`: adds this computer to the phone's Push XML Server list. The old value is saved so `push reset` can restore it.
+
+### push send
+
+`ylctl push send <host> [--file FILE.xml] [--text "Title" --text "line"] [--image PICTURE] [--size 192x64] [--crop L,T,R,B] [--levels 2|4|16] [--invert] [--dither fs|atkinson|bayer]`
+
+Sends one XML object: an XML file, a text screen (the first `--text` is the title), or a picture converted to a hex image.
+
+```sh
+ylctl push send 192.168.1.50 --text "Hello" --text "from ylctl"
+ylctl push send 192.168.1.50 --image logo.png --levels 2
+```
+
+### push reset
+
+`ylctl push reset <host>`: puts back the Push XML Server value saved before `push allow`.
+
+## logo
+
+The LCD logo on monochrome models (T41S, T42S/G, T41P). A picture is converted to Yealink's `.dob` format.
+
+### logo show
+
+`ylctl logo show <host>`: the current logo mode. Read-only.
+
+### logo set
+
+`ylctl logo set <host> --image PICTURE [--size 192x64] [--levels 2] [--crop L,T,R,B] [--invert] [--white-high] [--dither fs|atkinson|bayer] [--out FILE.dob] [--no-mode]`
+
+Converts the picture, uploads it and switches the custom logo on. `--no-mode` uploads without changing the mode.
+
+```sh
+ylctl logo set 192.168.1.50 --image logo.png
+```
+
+### logo mode
+
+`ylctl logo mode <host> off|system|custom`: chooses which logo the phone shows.
+
+### logo delete
+
+`ylctl logo delete <host>`: deletes the uploaded custom logo and switches the logo off.
+
+## screensaver
+
+Yealink phones load their screensaver from an XML file at a URL.
+
+### screensaver show
+
+`ylctl screensaver show <host>`: the phone's screensaver settings. Read-only.
+
+### screensaver build
+
+`ylctl screensaver build [--text LINE]... [--clock] [--status-icons] [--image PICTURE] [--crop L,T,R,B] [--size WxH] [--levels N] [--out FILE.xml]`
+
+Writes the screensaver XML file (to standard output unless `--out`). It does not contact a phone.
+
+```sh
+ylctl screensaver build --text "Netquor" --clock --out screensaver.xml
+```
+
+### screensaver set
+
+`ylctl screensaver set <host> --url https://... [--wait 5m] [--type-xml] [--dry-run]`: points the phone's screensaver at an XML URL. `--wait` sets the idle time before it starts. `--dry-run` shows the change and sends nothing. `screensaver reset` puts the saved settings back.
+
+### screensaver reset
+
+`ylctl screensaver reset <host>`: puts back the screensaver settings saved before `screensaver set`.
+
 ## completion
 
 `ylctl completion bash|zsh|fish|powershell`.

@@ -55,6 +55,9 @@ ylctl status 192.168.1.50               # registration state per account, networ
 ylctl autop show 192.168.1.50           # provisioning settings, secrets masked
 ylctl account show 192.168.1.50         # SIP account 1: server, port, transport (password masked)
 ylctl provision-now 192.168.1.50        # "Auto Provision Now"
+ylctl firmware status 192.168.1.50      # running firmware version and model
+ylctl firmware upgrade 192.168.1.50 ~/Downloads/T4XS-66.86.0.180.rom --dry-run   # check the plan, send nothing
+ylctl reboot 192.168.1.50               # restart the phone (asks first)
 ylctl adopt 192.168.1.50 --url https://pbx.example.net/webhooks/provision/TOKEN/ --disable-dhcp --disable-pnp --dry-run
 ylctl autop set 192.168.1.50 RepeatMinutes=61 --dry-run
 ylctl --json status 192.168.1.50        # JSON for scripts
@@ -88,7 +91,7 @@ in scripts pass `--trust-new`. **A changed fingerprint is always a hard error.**
 * Writes (`adopt`, `autop set`) read the current value first, show a before/after diff, support `--dry-run`, refuse when nothing would change unless `--force` (exit 6),
   write only the named non-secret `AutoProvision*` fields, and re-read the page to verify.
 * Secrets never appear in output, logs or errors. Values of fields matching `pass|pwd|aes|secret|key|token` print as `********`. The provisioning URL contains a token and prints truncated unless `--reveal`.
-* No factory reset, firmware upgrade, password change, config import or reboot exists in this version.
+* No factory reset or config import exists in this version. `ylctl firmware upgrade` reflashes the phone: it checks the file header and the version, shows the plan, and asks first (`--dry-run` sends nothing).
 * No telemetry, no self-update. The only network traffic goes to the hosts you name or scan.
 
 ## What it does to the phone
