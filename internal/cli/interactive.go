@@ -33,6 +33,8 @@ var guidePages = []guidePage{
     provision-now <host>    make the phone fetch its config now
     adopt <host>            point the phone at your provisioning server
     autop set <host>        change one auto-provision setting
+    firmware upgrade <host> <file.rom>   upload a .rom and reboot the phone into it (asks first)
+    reboot <host>           restart the phone (asks first)
     password set <host>     change the web admin password (typed confirmation; keeps the vault in step)
     password recover <host> finish or undo an interrupted password change
 
@@ -75,13 +77,13 @@ var guidePages = []guidePage{
   --try-default tries admin/admin once; it warns when that works. Change that password.
 
   Read-only:      discover, info, status, autop show, account show, logs show, capture status
-  Changes phone:  adopt, autop set, provision-now, password set, logs follow (temporary), capture follow (temporary)
+  Changes phone:  adopt, autop set, provision-now, reboot, firmware upgrade, password set, logs follow (temporary), capture follow (temporary)
 
   logs follow saves the phone's old syslog settings first and puts them back when you quit.
   If a run is killed:  ylctl logs restore <host>
   capture follow always stops the capture on exit.  If it cannot:  ylctl capture stop <host>
 
-  Not built on purpose (see the roadmap): reboot, factory reset, firmware update.
+  Not built on purpose (see the roadmap): factory reset.
 `},
 	{'a', "About", `
   ylctl talks to the web interface of Yealink desk phones on your own network.

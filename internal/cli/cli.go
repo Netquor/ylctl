@@ -213,7 +213,7 @@ func (a *app) rootCmd() *cobra.Command {
 		defHelp(c, args)
 	})
 	root.AddCommand(a.versionCmd(), a.discoverCmd(), a.infoCmd(), a.statusCmd(), a.autopCmd(),
-		a.accountCmd(), a.provisionNowCmd(), a.rebootCmd(), a.pushCmd(), a.logoCmd(), a.adoptCmd(), a.authCmd(), a.screensaverCmd(), a.captureCmd(), a.logsCmd(), a.passwordCmd(), a.loginCmd(), a.logoutCmd(), a.whoamiCmd(), a.reconCmd())
+		a.accountCmd(), a.provisionNowCmd(), a.rebootCmd(), a.pushCmd(), a.logoCmd(), a.adoptCmd(), a.authCmd(), a.screensaverCmd(), a.captureCmd(), a.logsCmd(), a.passwordCmd(), a.loginCmd(), a.logoutCmd(), a.whoamiCmd(), a.reconCmd(), a.firmwareCmd())
 	return root
 }
 
