@@ -1,0 +1,77 @@
+{
+  "info": {
+    "model": "T41S",
+    "firmware": "66.85.0.79",
+    "hardware": "68.0.0.0.0.0.0",
+    "mac": "80:5E:C0:00:00:0B",
+    "ip": "10.20.30.211",
+    "uptime_seconds": 3623,
+    "uptime": "0 days 01:00"
+  },
+  "network": {
+    "wan_type": "DHCP",
+    "ip": "10.20.30.211",
+    "mask": "255.255.255.0",
+    "gateway": "10.20.30.1",
+    "dns1": "1.1.1.1",
+    "dns2": "1.0.0.1",
+    "vlan_id": "0",
+    "link": "100Mbps Full Duplex"
+  },
+  "accounts": [
+    {
+      "index": 1,
+      "account": "1004@pbx.example.net",
+      "state": {
+        "code": 2,
+        "state": "registered",
+        "observed_live": true
+      }
+    },
+    {
+      "index": 2,
+      "account": "",
+      "state": {
+        "code": 0,
+        "state": "disabled",
+        "observed_live": true
+      }
+    },
+    {
+      "index": 3,
+      "account": "",
+      "state": {
+        "code": 0,
+        "state": "disabled",
+        "observed_live": true
+      }
+    },
+    {
+      "index": 4,
+      "account": "",
+      "state": {
+        "code": 0,
+        "state": "disabled",
+        "observed_live": true
+      }
+    },
+    {
+      "index": 5,
+      "account": "",
+      "state": {
+        "code": 0,
+        "state": "disabled",
+        "observed_live": true
+      }
+    },
+    {
+      "index": 6,
+      "account": "",
+      "state": {
+        "code": 0,
+        "state": "disabled",
+        "observed_live": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+Account         1 (enabled)
+Label           1004
+Display name    Test Phone 2
+Register name   1004
+User name       1004
+Password        ********
+SIP server 1    pbx.example.net:5061 TLS
+Outbound proxy  off :5060

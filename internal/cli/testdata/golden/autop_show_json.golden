@@ -1,0 +1,92 @@
+{
+  "fields": [
+    {
+      "name": "AutoProvisionEnablePNP",
+      "value": "0"
+    },
+    {
+      "name": "AutoProvisionEnableDHCPOption",
+      "value": "0"
+    },
+    {
+      "name": "AutoProvisionOptionType",
+      "value": ""
+    },
+    {
+      "name": "AutoProvisionOptionTypeIPv6",
+      "value": ""
+    },
+    {
+      "name": "AutoProvisionServerURL",
+      "value": "https://pbx.example.net/webhooks/provision/%3Ctoken%3E/"
+    },
+    {
+      "name": "AutoProvisionUser",
+      "value": ""
+    },
+    {
+      "name": "AutoProvisionPassword",
+      "value": "********"
+    },
+    {
+      "name": "AutoProvisionAESKey16",
+      "value": "********"
+    },
+    {
+      "name": "AutoProvisionAESKey16MAC",
+      "value": "********"
+    },
+    {
+      "name": "AutoProvisionPowerOn",
+      "value": "1"
+    },
+    {
+      "name": "AutoProvisionRepeat",
+      "value": "1"
+    },
+    {
+      "name": "AutoProvisionRepeatMinutes",
+      "value": "60"
+    },
+    {
+      "name": "AutoProvisionEnableWeekly",
+      "value": "0"
+    },
+    {
+      "name": "AutoProvisionWeeklyUpgradeInterval",
+      "value": "0"
+    },
+    {
+      "name": "AutoProvisionInactivityTimeExpire",
+      "value": "0"
+    },
+    {
+      "name": "AutoProvisionWeeklyBeginTime",
+      "value": "00:00"
+    },
+    {
+      "name": "AutoProvisionWeeklyEndTime",
+      "value": "00:00"
+    },
+    {
+      "name": "AutoProvisionWeeklyMask",
+      "value": "0123456"
+    },
+    {
+      "name": "AutoProvisionFlexibleSwitch",
+      "value": "0"
+    },
+    {
+      "name": "AutoProvisionFlexibleInterval",
+      "value": "30"
+    },
+    {
+      "name": "AutoProvisionFlexibleBeginTime",
+      "value": "02:00"
+    },
+    {
+      "name": "AutoProvisionFlexibleEndTime",
+      "value": ""
+    }
+  ]
+}

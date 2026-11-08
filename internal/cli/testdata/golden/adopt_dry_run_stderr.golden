@@ -1,0 +1,5 @@
+dry run, would change on PHONE:
+  AutoProvisionServerURL           (empty) -> https://pbx.example.net/webhooks/provision/abcd.../
+  AutoProvisionEnableDHCPOption    1 -> 0
+  AutoProvisionEnablePNP           1 -> 0
+dry run: would POST q=write with fields AutoProvisionEnableDHCPOption, AutoProvisionEnablePNP, AutoProvisionServerURL and the CSRF token, then POST q=autopnow. Nothing was sent.

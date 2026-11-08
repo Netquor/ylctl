@@ -1,0 +1,16 @@
+{
+  "phones": [
+    {
+      "ip": "127.0.0.1",
+      "port": 0,
+      "scheme": "https",
+      "model": "T41S",
+      "firmware": "66.86.0.15",
+      "cert_sha256": "<fp>"
+    }
+  ],
+  "probed": 1,
+  "ranges": [
+    "127.0.0.1/32"
+  ]
+}

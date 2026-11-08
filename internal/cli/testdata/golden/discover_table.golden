@@ -1,0 +1,2 @@
+ADDRESS    MODEL  FIRMWARE    PORT         CERT SHA-256
+127.0.0.1  T41S   66.86.0.15  <port>/https  <fp>

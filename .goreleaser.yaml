@@ -1,0 +1,49 @@
+# GoReleaser configuration. No signing keys live in this repository.
+version: 2
+project_name: ylctl
+
+before:
+  hooks:
+    - go mod tidy
+    - go test ./...
+
+builds:
+  - id: ylctl
+    main: ./cmd/ylctl
+    binary: ylctl
+    env:
+      - CGO_ENABLED=0
+    goos: [darwin, linux, windows]
+    goarch: [amd64, arm64]
+    flags: [-trimpath]
+    ldflags:
+      - -s -w
+      - -X github.com/Netquor/ylctl/internal/cli.Version={{.Version}}
+      - -X github.com/Netquor/ylctl/internal/cli.Commit={{.ShortCommit}}
+      - -X github.com/Netquor/ylctl/internal/cli.Date={{.Date}}
+
+archives:
+  - id: default
+    formats: [tar.gz]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    files:
+      - LICENSE
+      - README.md
+      - docs/commands.md
+
+checksum:
+  name_template: checksums.txt
+  algorithm: sha256
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+release:
+  draft: true

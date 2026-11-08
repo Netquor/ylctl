@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "field": "AutoProvisionServerURL",
+      "before": "https://pbx.example.net/webhooks/provision/abcd.../",
+      "after": "https://pbx.example.net/webhooks/provision/abcd.../"
+    }
+  ],
+  "dry_run": true,
+  "host": "PHONE"
+}

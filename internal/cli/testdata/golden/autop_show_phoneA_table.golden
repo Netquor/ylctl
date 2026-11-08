@@ -1,0 +1,23 @@
+FIELD                  VALUE
+EnablePNP              1
+EnableDHCPOption       1
+OptionType             
+OptionTypeIPv6         
+ServerURL              
+User                   
+Password               ********
+AESKey16               ********
+AESKey16MAC            ********
+PowerOn                1
+Repeat                 1
+RepeatMinutes          60
+EnableWeekly           0
+WeeklyUpgradeInterval  0
+InactivityTimeExpire   0
+WeeklyBeginTime        00:00
+WeeklyEndTime          00:00
+WeeklyMask             0123456
+FlexibleSwitch         0
+FlexibleInterval       30
+FlexibleBeginTime      02:00
+FlexibleEndTime        

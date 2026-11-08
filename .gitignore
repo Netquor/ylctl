@@ -1,0 +1,4 @@
+/dist/
+/ylctl
+*.test
+*.out

@@ -1,0 +1,26 @@
+{
+  "account": 1,
+  "enabled": true,
+  "label": "1004",
+  "display_name": "Test Phone 2",
+  "register_name": "1004",
+  "user_name": "1004",
+  "password": "********",
+  "servers": [
+    {
+      "host": "pbx.example.net",
+      "port": "5061",
+      "transport": "TLS"
+    },
+    {
+      "host": "",
+      "port": "5060",
+      "transport": "UDP"
+    }
+  ],
+  "outbound_proxy": {
+    "enabled": false,
+    "host": "",
+    "port": "5060"
+  }
+}

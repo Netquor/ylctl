@@ -10,7 +10,7 @@ def rsa_encrypt_hex(n_hex, e_hex, msg):
     ps = bytes(secrets.choice(range(1, 256)) for _ in range(k - len(msg) - 3))
     em = b"\x00\x02" + ps + b"\x00" + msg
     c = pow(int.from_bytes(em, "big"), e, n)
-    return format(c, "x")
+    return format(c, "0%dx" % (2 * k))  # fixed width: an unpadded hex string is rejected by the phone about 1 time in 8
 
 def aes_cbc_zero(key_hex, iv_hex, plaintext):
     pad = (-len(plaintext)) % 16
