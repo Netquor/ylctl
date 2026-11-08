@@ -2,9 +2,11 @@ package yealink
 
 import (
 	"context"
+	crand "crypto/rand"
 	"crypto/rsa"
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -227,16 +229,26 @@ func (c *Client) Login(ctx context.Context, user, pass string) error {
 		return err
 	}
 	c.rsaPub = pub
-	sid := c.sessionID()
-	if sid == "" {
-		return fmt.Errorf("%w: no session cookie", ErrUnexpectedPage)
+	// Two login flows, chosen from the login form itself (no password is sent to decide):
+	//   legacy (66.85, 66.86.0.15): the form sets JSESSIONID; the password travels inside an
+	//   encrypted blob that includes the session id, with rsakey and rsaiv.
+	//   post-login (66.86.0.180): the form sets no cookie; the password is only RSA-encrypted,
+	//   and the server sets JSESSIONID in its answer to the login POST.
+	var body string
+	if sid := c.sessionID(); sid != "" {
+		sec, err := EncryptLogin(pub, sid, pass, nil)
+		if err != nil {
+			return err
+		}
+		body = "username=" + url.QueryEscape(user) + "&pwd=" + url.QueryEscape(sec.Pwd) +
+			"&rsakey=" + url.QueryEscape(sec.RSAKey) + "&rsaiv=" + url.QueryEscape(sec.RSAIV)
+	} else {
+		enc, err := rsa.EncryptPKCS1v15(crand.Reader, pub, []byte(pass))
+		if err != nil {
+			return fmt.Errorf("rsa: %w", err)
+		}
+		body = "username=" + url.QueryEscape(user) + "&pwd=" + url.QueryEscape(hex.EncodeToString(enc))
 	}
-	sec, err := EncryptLogin(pub, sid, pass, nil)
-	if err != nil {
-		return err
-	}
-	body := "username=" + url.QueryEscape(user) + "&pwd=" + url.QueryEscape(sec.Pwd) +
-		"&rsakey=" + url.QueryEscape(sec.RSAKey) + "&rsaiv=" + url.QueryEscape(sec.RSAIV)
 	res, err := c.fetch(ctx, http.MethodPost, "/servlet?m=mod_listener&p=login&q=login", body)
 	if err != nil {
 		var he *HTTPError
